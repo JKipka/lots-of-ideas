@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-buttons left>
+      <button ion-button (click)="logout()">
+      <ion-icon name="log-out" class="navBtn"></ion-icon>
+    </button>
+    </ion-buttons>
+    <ion-title>Meine ganzen Ideen</ion-title>
+    <ion-buttons right>
+      <button ion-button (click)="viewProfile()">
+      <ion-icon name="person" class="navBtn"></ion-icon>
+    </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-searchbar *ngIf="filter!='Kategorie' && filter!=''"(ionInput)="getSearchResults($event)" placeholder="Suche"></ion-searchbar>
+  <ion-item>
+    <ion-label>Filter</ion-label>
+    <ion-select [(ngModel)]="filter" cancelText="Zurücksetzen" (ionCancel)="resetFilter()" (ionChange)="determineFilter(filter)" placeholder="Auswählen...">
+      <ion-option value="Schlagwörter">Schlagwörter</ion-option>
+      <ion-option value="Titel">Titel</ion-option>
+      <ion-option value="Kategorie">Kategorie</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="filter=='Kategorie'">
+    <ion-label>Kategorie</ion-label>
+    <ion-select [(ngModel)]="category" cancelText="Zurücksetzen" (ionCancel)="resetCategoryFilter()" (ionChange)="getSearchResultsBy(category)" placeholder="Auswählen...">
+      <ion-option value="">Keine Auswahl</ion-option>
+      <ion-option value="Film">Film</ion-option>
+      <ion-option value="Geschichte">Geschichte</ion-option>
+      <ion-option value="Webseite">Webseite</ion-option>
+      <ion-option value="Blog">Blog</ion-option>
+      <ion-option value="App">App</ion-option>
+      <ion-option value="Skizze">Skizze</ion-option>
+      <ion-option value="Notiz">Notiz</ion-option>
+    </ion-select>
+  </ion-item><br>
+  <ion-list>
+    <ion-item-sliding *ngFor="let idea of ideas" [(ngModel)]="idea.ideatitle" ngDefaultControl>
+      <ion-item detail-push>
+      <ion-icon name="{{idea.icon}}" item-left></ion-icon>
+      <div class="idea-title">
+        {{idea.ideatitle}}
+      </div>
+      <div class="idea-details">
+        Kategorie: {{idea.ideacategory}}
+      </div>
+      </ion-item>
+      <ion-item-options>
+        <button ion-button color="danger" (click)="showAlert(idea)">Löschen</button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-fab right bottom>
+    <button ion-fab color="secondary" (click)="pushToAddNewIdea()">
+    <ion-icon name="add"></ion-icon>
+  </button>
+  </ion-fab>
+</ion-content>

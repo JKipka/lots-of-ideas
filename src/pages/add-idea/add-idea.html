@@ -1,0 +1,236 @@
+<!--
+  Generated template for the AddIdea page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton="true">
+    <ion-buttons left>
+      <button ion-button (click)="toRoot()">Zurück</button>
+    </ion-buttons>
+    <ion-title>Idee hinzufügen</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <form [formGroup]="generalInfoForm" novalidate>
+    <ion-list>
+      <ion-list-header>Titel deiner Idee</ion-list-header>
+      <ion-item>
+        <ion-icon name="information" item-left></ion-icon>
+        <ion-input #ideatitle formControlName="ideatitle" placeholder="Dein toller Titel" [class.invalid]="!generalInfoForm.controls.ideatitle.valid"></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-list>
+      <ion-list-header>Kategorie deiner Idee</ion-list-header>
+      <ion-item>
+        <ion-icon name="archive" item-left></ion-icon>
+        <ion-label>Kategorie</ion-label>
+        <ion-select [(ngModel)]="category" [ngModelOptions]="{standalone: true}" (ionChange)="getSelectedCategory(category)" placeholder="Auswählen...">
+          <ion-option value="Film">Film</ion-option>
+          <ion-option value="Geschichte">Geschichte</ion-option>
+          <ion-option value="Webseite">Webseite</ion-option>
+          <ion-option value="Blog">Blog</ion-option>
+          <ion-option value="App">App</ion-option>
+          <!--<ion-option value="Skizze">Skizze</ion-option>-->
+          <ion-option value="Notiz">Notiz</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </form>
+  <!--
+      FILM SECTION
+      -->
+  <form *ngIf="category=='Film'" [formGroup]="movieForm" (submit)="addMovieIdea()" novalidate>
+    <ion-list>
+      <ion-list-header>Film-Idee hinzufügen</ion-list-header>
+      <ion-item>
+        <ion-icon name="clipboard" item-left></ion-icon>
+        <ion-input #movietitle formControlName="movietitle" placeholder="Filmtitel"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="copy" item-left></ion-icon>
+        <ion-label>Filmkategorie</ion-label>
+        <ion-select placeholder="Auswählen" [(ngModel)]="movieType" (ionChange)="getSelectedMovieType(movieType)" [ngModelOptions]="{standalone: true}">
+          <ion-option value="Spielfilm">Spielfilm</ion-option>
+          <ion-option value="Kurzfilm">Kurzfilm</ion-option>
+          <ion-option value="Video">Video</ion-option>
+          <ion-option value="Stummfilm">Stummfilm</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="albums" item-left></ion-icon>
+        <ion-input #moviegenre formControlName="moviegenre" placeholder="Genre"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="attach" item-left></ion-icon>
+        <ion-textarea #moviedesc formControlName="moviedesc" rows="4" placeholder="Inhaltsbeschreibung" [class.invalid]="!movieForm.controls.moviedesc.valid"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="search" item-left></ion-icon>
+        <rl-tag-input [(ngModel)]="movietags" placeholder="Schlagwörter" [ngModelOptions]="{standalone: true}"></rl-tag-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button outline block>Hinzufügen</button>
+  </form>
+  <!--
+    BUCH SECTION
+    -->
+  <form *ngIf="category=='Geschichte'" [formGroup]="storyForm" (submit)="addStoryIdea()" novalidate>
+    <ion-list>
+      <ion-list-header>Geschichts-Idee hinzufügen</ion-list-header>
+      <ion-item>
+        <ion-icon name="clipboard" item-left></ion-icon>
+        <ion-input #storytitle formControlName="storytitle" placeholder="Geschichtstitel"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="albums" item-left></ion-icon>
+        <ion-input #storygenre formControlName="storygenre" placeholder="Genre"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="attach" item-left></ion-icon>
+        <ion-textarea #storydesc formControlName="storydesc" rows="4" placeholder="Inhaltsbeschreibung" [class.invalid]="!storyForm.controls.storydesc.valid"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="search" item-left></ion-icon>
+        <rl-tag-input [(ngModel)]="booktags" placeholder="Schlagwörter" [ngModelOptions]="{standalone: true}"></rl-tag-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button outline block>Hinzufügen</button>
+  </form>
+  <!--
+    WEBSITE SECTION
+    -->
+  <form *ngIf="category=='Webseite'" [formGroup]="websiteForm" (submit)="addWebsiteIdea()">
+    <ion-list>
+      <ion-list-header>Website-Idee hinzufügen</ion-list-header>
+      <ion-item>
+        <ion-icon name="clipboard" item-left></ion-icon>
+        <ion-input #websitetitle formControlName="websitetitle" placeholder="Name der Website"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="globe" item-left></ion-icon>
+        <ion-input #websitedomain formControlName="websitedomain" placeholder="Gewünschte Domainadresse"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="copy" item-left></ion-icon>
+        <ion-label>Kategorie der Website</ion-label>
+        <ion-select placeholder="Auswählen" [(ngModel)]="websitetype" [ngModelOptions]="{standalone: true}" (ionChange)="getSelectedWebsiteType(websitetype)">
+          <ion-option value="Nachrichten">Nachrichten</ion-option>
+          <ion-option value="Klatsch und Tratsch">Klatsch und Tratsch</ion-option>
+          <ion-option value="Dienstleistung/Service">Dienstleistung/Service</ion-option>
+          <ion-option value="Geschäftlich">Geschäftlich</ion-option>
+          <ion-option value="Privat">Privat</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="attach" item-left></ion-icon>
+        <ion-textarea #websitedesc formControlName="websitedesc" rows="4" placeholder="Beschreibung der Website"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="search" item-left></ion-icon>
+        <rl-tag-input [(ngModel)]="websitetags" placeholder="Schlagwörter" [ngModelOptions]="{standalone: true}"></rl-tag-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button outline block>Hinzufügen</button>
+  </form>
+  <!--
+    BLOG SECTION
+    -->
+  <form *ngIf="category=='Blog'" [formGroup]="blogForm" novalidate>
+    <ion-list>
+      <ion-list-header>Blog-Idee hinzufügen</ion-list-header>
+      <ion-item>
+        <ion-icon name="clipboard" item-left></ion-icon>
+        <ion-input #blogtitle formControlName="blogtitle" placeholder="Name des Blogs"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Blog-Kategorie</ion-label>
+        <ion-icon name="copy" item-left></ion-icon>
+        <ion-select [(ngModel)]="blogType" placeholder="Auswählen" [ngModelOptions]="{standalone: true}" (ionChange)="getSelectedBlogType(blogType)">
+          <ion-option value="Nachrichten">Nachrichten</ion-option>
+          <ion-option value="Reisen">Reisen</ion-option>
+          <ion-option value="Tagebuch">Tagebuch</ion-option>
+          <ion-option value="Lifestyle">Lifestyle</ion-option>
+          <ion-option value="Memes">Memes</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="attach" item-left></ion-icon>
+        <ion-textarea rows="4" #blogdesc formControlName="blogdesc" placeholder="Beschreibung des Blogs"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="search" item-left></ion-icon>
+        <rl-tag-input [(ngModel)]="blogtags" placeholder="Schlagwörter" [ngModelOptions]="{standalone: true}"></rl-tag-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button outline block>Hinzufügen</button>
+  </form>
+  <!--
+    APP SECTION
+    -->
+  <form *ngIf="category=='App'" [formGroup]="appForm" novalidate>
+    <ion-list>
+      <ion-list-header>App-Idee hinzufügen</ion-list-header>
+      <ion-item>
+        <ion-icon name="clipboard" item-left></ion-icon>
+        <ion-input #apptitle formControlName="apptitle" placeholder="Name der App"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>App-Kategorie</ion-label>
+        <ion-icon name="copy" item-left></ion-icon>
+        <ion-select [(ngModel)]="appType" placeholder="Auswählen" [ngModelOptions]="{standalone: true}" (ionChange)="getSelectedAppType(appType)">
+          <ion-option value="Nachrichten">Nachrichten</ion-option>
+          <ion-option value="Reisen">Reisen</ion-option>
+          <ion-option value="Spiel">Spiel</ion-option>
+          <ion-option value="Sport">Sport</ion-option>
+          <ion-option value="Humor">Humor</ion-option>
+          <ion-option value="Wissen">Wissen</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="disc" item-left></ion-icon>
+        <ion-input #apptarget formControlName="apptarget" placeholder="Zielgruppe"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="attach" item-left></ion-icon>
+        <ion-textarea rows="4" #appdesc formControlName="appdesc" placeholder="Beschreibung der App"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="search" item-left></ion-icon>
+        <rl-tag-input [(ngModel)]="apptags" placeholder="Schlagwörter" [ngModelOptions]="{standalone: true}"></rl-tag-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button outline block>Hinzufügen</button>
+  </form>
+  <!--
+     SKIZZE SECTION
+     -->
+  <form *ngIf="category=='Skizze'" [formGroup]="sketchForm" novalidate>
+    <ion-list>
+      <ion-list-header>Skizze-Idee hinzufügen</ion-list-header>
+    </ion-list>
+    <button ion-button outline block>Hinzufügen</button>
+  </form>
+  <!--
+      NOTIZ SECTION
+      -->
+  <form *ngIf="category=='Notiz'" [formGroup]="noteForm" (submit)="addNote()" novalidate>
+    <ion-list>
+      <ion-list-header>Notiz hinzufügen</ion-list-header>
+      <ion-item>
+        <ion-icon name="create" item-left></ion-icon>
+        <ion-textarea #notedesc formControlName="notedesc" rows="7" placeholder="Inhalt der Notiz..."></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="search" item-left></ion-icon>
+        <rl-tag-input [(ngModel)]="notetags" placeholder="Schlagwörter" [ngModelOptions]="{standalone: true}"></rl-tag-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button outline block>Hinzufügen</button>
+  </form>
+</ion-content>

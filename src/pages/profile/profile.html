@@ -1,0 +1,42 @@
+<!--
+  Generated template for the Profile page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton="true">
+    <ion-buttons left>
+      <button ion-button (click)="toRoot()">Zurück</button>
+    </ion-buttons>
+    <ion-title>Profil</ion-title>
+    <ion-buttons right>
+      <button *ngIf="!editMode" ion-button (click)="editProfile()">Bearbeiten</button>
+        <button *ngIf="editMode" ion-button (click)="saveProfile()">Fertig</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+<ion-list>
+  <ion-item>
+    <ion-label class="profile-label-fixed">Vorname:</ion-label>
+    <ion-label *ngIf="!editMode">{{user.firstname}}</ion-label>
+    <ion-input *ngIf="editMode" value="{{user.firstname}}"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label class="profile-label-fixed">Nachname:</ion-label>
+    <ion-label *ngIf="!editMode">{{user.lastname}}</ion-label>
+    <ion-input *ngIf="editMode" value="{{user.lastname}}"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label class="profile-label-fixed">E-Mail:</ion-label>
+    <ion-label *ngIf="!editMode">{{user.email}}</ion-label>
+    <ion-input *ngIf="editMode" value="{{user.email}}"></ion-input>
+  </ion-item>
+  <button ion-button outline block>Passwort ändern</button>
+  <button ion-button outline block color="danger">Account löschen</button>
+</ion-list>
+</ion-content>
