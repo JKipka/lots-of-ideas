@@ -4,10 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import firebase from 'firebase';
 
 /*
-  Generated class for the AddIdea page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
+  TODO: IMPLEMENT ADDBLOG UND ADDAPP
 */
 @Component({
   selector: 'page-add-idea',
