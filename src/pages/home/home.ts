@@ -253,7 +253,8 @@ export class HomePage {
     this.navCtrl.push(AddIdeaPage, {
       userId: this.userData.uid,
       userData: this.userData,
-      username: this.username
+      username: this.username,
+      userAcc: this.user
     });
   }
 

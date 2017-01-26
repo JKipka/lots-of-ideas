@@ -15,6 +15,8 @@ export class AddIdeaPage {
   userId: any;
   userData:any;
   username:any;
+  userAcc:any;
+  score:any;
 
   loadingSpinner: any;
 
@@ -46,9 +48,12 @@ export class AddIdeaPage {
 
     this.userId = navParams.get("userId");
     this.userData = navParams.get("userData");
+    this.userAcc = navParams.get("userAcc");
+    this.score = this.userAcc.score;
     this.username = navParams.get("username");
     console.log(this.username);
     console.log(this.userId);
+    console.log(this.userAcc);
 
     this.generalInfoForm = fB.group({
       ideatitle: ['', Validators.compose([Validators.required])]
