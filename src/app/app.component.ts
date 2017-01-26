@@ -11,15 +11,10 @@ import { StartupPage } from '../pages/startup/startup';
 import {SavedIdeasPage} from '../pages/saved-ideas/saved-ideas';
 import {FriendsPage} from '../pages/friends/friends';
 import {FindIdeasPage} from '../pages/find-ideas/find-ideas';
+import {firebaseConfig} from './firebaseData';
 
 
-firebase.initializeApp({
-  apiKey: "AIzaSyCMpbj2jf-2eHs0A01hsbPKoif4HjWcyZs",
-  authDomain: "movieideas-c8ebd.firebaseapp.com",
-  databaseURL: "https://movieideas-c8ebd.firebaseio.com",
-  storageBucket: "movieideas-c8ebd.appspot.com",
-  messagingSenderId: "1030635120633"
-});
+firebase.initializeApp(firebaseConfig);
 
 @Component({
   templateUrl: 'app.html',
