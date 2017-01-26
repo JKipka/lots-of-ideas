@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import firebase from 'firebase';
 import { Auth } from '../../providers/auth';
-import {ProfilePage} from '../profile/profile';
+import { ProfilePage } from '../profile/profile';
 /*
   Generated class for the ViewPublicIdeas page.
 
@@ -42,7 +42,7 @@ export class ViewPublicIdeasPage {
   }
 
   ionViewDidLoad() {
-    
+
   }
 
   fetchSavedIdeas() {
@@ -70,8 +70,8 @@ export class ViewPublicIdeasPage {
       }
       for (let i in this.ideasPerCategory) {
         idea = this.ideasPerCategory[i];
-        for(let j in this.savedIdeas){
-          if(idea.ideaId==this.savedIdeas[j].ideaId){
+        for (let j in this.savedIdeas) {
+          if (idea.ideaId == this.savedIdeas[j].ideaId) {
             idea.isAdded = true;
           }
         }
@@ -97,11 +97,11 @@ export class ViewPublicIdeasPage {
     return text;
   }
 
-  viewUserProfile(userId){
+  viewUserProfile(userId) {
     let user = [];
     firebase.database().ref('users/' + userId).once('value', snapshot => {
       user = snapshot.val();
-    }).then(data=>{
+    }).then(data => {
       this.navCtrl.push(ProfilePage, {
         user: user,
         editable: false
@@ -112,48 +112,61 @@ export class ViewPublicIdeasPage {
     })
   }
 
-  savePublicIdea(ideaId) {
+  savePublicIdea(idea) {
+    let ideaId = idea.ideaId;
+    let uidOP = idea.uid;
+    let score;
     let id = this.makeid();
     firebase.database().ref('users/' + this.user.uid + '/saved_ideas').child(id).set({
       ideaId: ideaId
     }).then(data => {
-      for(let i in this.ideasPerCategory){
+      for (let i in this.ideasPerCategory) {
         let idea = this.ideasPerCategory[i];
-        if(idea.ideaId==ideaId){
+        if (idea.ideaId == ideaId) {
           idea.isAdded = true;
         }
       }
-      //refresh saved ideas
-      this.fetchSavedIdeas();
-      let toast = this.toastCtrl.create({
-        message:'Idee gespeichert!',
-        duration: 2000
+
+      firebase.database().ref('users/' + uidOP).once('value', snapshot => {
+        let userinfo = snapshot.val();
+        score = userinfo.score;
+      }).then(data => {
+        score = score + 50;
+        firebase.database().ref('users/' + uidOP).update({
+          score: score
+        }).then(data => {
+          //refresh saved ideas
+          this.fetchSavedIdeas();
+          let toast = this.toastCtrl.create({
+            message: 'Idee gespeichert!',
+            duration: 2000
+          });
+          toast.present();
+        });
       });
-      toast.present();
-      //show toast
-      //add points to OP
     })
   }
 
-  deletePublicIdea(ideaId){
+  deletePublicIdea(ideaP) {
+    let ideaId = ideaP.ideaId;
     let idea;
     let deleteId;
-    for(let i in this.savedIdeas){
+    for (let i in this.savedIdeas) {
       idea = this.savedIdeas[i];
-      if(idea.ideaId==ideaId){
+      if (idea.ideaId == ideaId) {
         deleteId = i;
       }
     }
     firebase.database().ref('users/' + this.user.uid + '/saved_ideas/' + deleteId).remove().then(data => {
-      for(let i in this.ideasPerCategory){
+      for (let i in this.ideasPerCategory) {
         let idea = this.ideasPerCategory[i];
-        if(idea.ideaId==ideaId){
+        if (idea.ideaId == ideaId) {
           idea.isAdded = false;
         }
       }
       this.fetchSavedIdeas();
       let toast = this.toastCtrl.create({
-        message:'Idee entfernt!',
+        message: 'Idee entfernt!',
         duration: 2000
       });
       toast.present();

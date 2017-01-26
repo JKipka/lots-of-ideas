@@ -44,7 +44,13 @@ export class SignupPage {
     if (!this.signupForm.valid) {
       console.log(this.signupForm.value);
     } else {
+      this.loading = this.loadingCtrl.create({
+          spinner:'ios',
+          content:'Account anlegen'
+        });
+        this.loading.present();
         this.authData.signupUser(this.signupForm.value.firstname, this.signupForm.value.lastname, this.signupForm.value.email, this.signupForm.value.password).then(() => {
+          this.loading.dismiss().catch(error=>console.log("error caught"));
           this.nav.setRoot(ChooseUsernamePage);
         }, (error) => {
           this.loading.dismiss();
@@ -59,10 +65,7 @@ export class SignupPage {
           });
           alert.present();
         });
-        this.loading = this.loadingCtrl.create({
-          dismissOnPageChange: true,
-        });
-        this.loading.present().then(() => this.loading.dismiss().catch(error=>console.log("error caught")));
+        
     }
   }
 

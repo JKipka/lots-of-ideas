@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{user.username}}</ion-title>
+    <ion-title>Profil</ion-title>
     <ion-buttons right *ngIf="editable">
       <button *ngIf="!editMode" ion-button (click)="editProfile()">Bearbeiten</button>
       <button *ngIf="editMode" ion-button (click)="saveProfile()">Fertig</button>
@@ -17,6 +17,7 @@
 
 
 <ion-content padding>
+  <p class="page-header">{{user.username}}</p>
   <div class="image-container">
     <img *ngIf="editable" class="image" src="{{this.currentUserData.picUrl}}" onError="this.src='assets/pics/profile.jpg'" (click)="changeProfilePicture()">
     <img *ngIf="!editable" class="image" src="{{this.currentUserData.picUrl}}" onError="this.src='assets/pics/profile.jpg'">

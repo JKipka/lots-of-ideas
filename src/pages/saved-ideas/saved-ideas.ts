@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import { Auth } from '../../providers/auth';
 import firebase from 'firebase';
+import { ProfilePage } from '../profile/profile';
 
 /*
   Generated class for the SavedIdeas page.
@@ -84,6 +85,21 @@ export class SavedIdeasPage {
         duration: 2000
       });
       toast.present();
+    })
+  }
+
+  viewUserProfile(userId) {
+    let user = [];
+    firebase.database().ref('users/' + userId).once('value', snapshot => {
+      user = snapshot.val();
+    }).then(data => {
+      this.navCtrl.push(ProfilePage, {
+        user: user,
+        editable: false
+      });
+    }).catch(error => {
+      //alert
+      console.log(error.message);
     })
   }
 

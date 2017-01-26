@@ -1,13 +1,14 @@
 <ion-header>
-  <ion-navbar color="primary">
+  <ion-navbar color="secondary">
     <ion-title>
-      Create an Account
+      Account erstellen
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
+  <p class="page-header">Anmelden</p>
   <form [formGroup]="signupForm" (submit)="signupUser()" novalidate>
     <ion-item>
       <ion-label stacked>Vorname</ion-label>
@@ -17,7 +18,7 @@
     </ion-item>
     <ion-item class="error-message" *ngIf="!signupForm.controls.firstname.valid  && (firstnameChanged || submitAttempt)">
       <p>Bitte gib einen gültigen Vornamen einen.</p>
-    </ion-item>
+    </ion-item><br>
     <ion-item>
       <ion-label stacked>Nachname</ion-label>
       <ion-input #lastname formControlName="lastname" type="text" (change)="elementChanged(lastname)"
@@ -26,28 +27,28 @@
     </ion-item>
     <ion-item class="error-message" *ngIf="!signupForm.controls.lastname.valid  && (lastnameChanged || submitAttempt)">
       <p>Bitte gib einen gültigen Nachnamen einen.</p>
-    </ion-item>
+    </ion-item><br>
     <ion-item>
-      <ion-label stacked>Email</ion-label>
+      <ion-label stacked>E-Mail Adresse</ion-label>
       <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)"
-        placeholder="Your email address"
+        placeholder="Deine E-Mail Adresse"
         [class.invalid]="!signupForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
     </ion-item>
     <ion-item class="error-message" *ngIf="!signupForm.controls.email.valid  && (emailChanged || submitAttempt)">
       <p>Bitte gib eine gültige E-Mail Adresse ein.</p>
-    </ion-item>
+    </ion-item><br>
 
     <ion-item>
-      <ion-label stacked>Password</ion-label>
+      <ion-label stacked>Passwort</ion-label>
       <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)"
-        placeholder="Your password"
+        placeholder="Passwort eingeben"
         [class.invalid]="!signupForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
     </ion-item>
     <ion-item class="error-message" *ngIf="!signupForm.controls.password.valid  && (passwordChanged || submitAttempt)">
       <p>Dein Passwort muss mindestens 6 Zeichen lang sein.</p>
-    </ion-item>
+    </ion-item><br>
 
-    <button ion-button block type="submit">
+    <button ion-button block outline color="secondary" type="submit">
       Account anlegen
     </button>
 

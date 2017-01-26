@@ -1,8 +1,8 @@
 import { Component, NgZone } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Auth } from '../../providers/auth';
-import {HomePage} from '../home/home';
+import { HomePage } from '../home/home';
 import firebase from 'firebase';
 
 /*
@@ -18,20 +18,21 @@ import firebase from 'firebase';
 export class ChooseUsernamePage {
   usernameTaken = false;
   usernameChanged = false;
-  usernameForm:any;
-  users:any;
-  usernames:any = [];
-  currentUser:any;
-  user:any;
-  username:any;
+  usernameForm: any;
+  users: any;
+  usernames: any = [];
+  currentUser: any;
+  user: any;
+  username: any;
+  loading:any;
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public zone: NgZone,public navParams: NavParams, formBuilder: FormBuilder,public auth:Auth) {
+  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public zone: NgZone, public navParams: NavParams, formBuilder: FormBuilder, public auth: Auth) {
     this.usernameForm = formBuilder.group({
       username: ['', Validators.compose([Validators.minLength(2), Validators.required])]
     })
   }
 
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     this.checkIfLoggedIn();
   }
 
@@ -40,33 +41,39 @@ export class ChooseUsernamePage {
     this.zone = new NgZone({});
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       this.zone.run(() => {
-          this.currentUser = user;
-          console.log(user);
-          this.fetchUsernames();
-          unsubscribe();
+        this.currentUser = user;
+        console.log(user);
+        this.fetchUsernames();
+        unsubscribe();
       });
     }, (error) => {
       console.log("error occured");
     });
   }
 
-  saveUsername(){
-    if(this.usernameTaken){
+  saveUsername() {
+    if (this.usernameTaken) {
       let alert = this.alertCtrl.create({
-        message:'Der gewählte Nutzername ist bereits vergeben. Bitte wähle einen anderen.',
-        buttons:['OK'],
-        title:'Nutzername nicht verfügbar'
+        message: 'Der gewählte Nutzername ist bereits vergeben. Bitte wähle einen anderen.',
+        buttons: ['OK'],
+        title: 'Nutzername nicht verfügbar'
       })
       alert.present();
-    }else{
-    firebase.database().ref('users/'+ this.currentUser.uid).update({
-      username:this.username
-    }).then(data => {
-      this.auth.setUsername(this.username);
-      this.navCtrl.setRoot(HomePage);
-    }).catch(error=>{
-      console.log(error.message);
-    })
+    } else {
+      this.loading = this.loadingCtrl.create({
+        spinner:'ios',
+        content:'Reservieren...'
+      });
+      this.loading.present();
+      firebase.database().ref('users/' + this.currentUser.uid).update({
+        username: this.username
+      }).then(data => {
+        this.auth.setUsername(this.username);
+        this.loading.dismiss().catch(error=>console.log(error.message));
+        this.navCtrl.setRoot(HomePage);
+      }).catch(error => {
+        console.log(error.message);
+      })
     }
   }
 
@@ -75,25 +82,25 @@ export class ChooseUsernamePage {
     this[field + "Changed"] = true;
   }
 
-  checkUsername(){
+  checkUsername() {
     this.usernameTaken = false;
     //if (val && val.trim() != '') {
-      //console.log(val);
-      for(let i in this.usernames){
-        if(this.usernames[i] == this.username){
-          this.usernameTaken = true;
-          break;
-          //Nutzername vergeben
-        }
+    //console.log(val);
+    for (let i in this.usernames) {
+      if (this.usernames[i] == this.username) {
+        this.usernameTaken = true;
+        break;
+        //Nutzername vergeben
       }
+    }
   }
 
-  fetchUsernames(){
+  fetchUsernames() {
     firebase.database().ref('users').once('value', snapshot => {
       this.users = snapshot.val();
       let user;
       let username;
-      for(let i in this.users){
+      for (let i in this.users) {
         user = this.users[i];
         username = user.username;
         this.usernames.push(username);

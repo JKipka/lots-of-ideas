@@ -36,11 +36,11 @@
       </ion-card-content>
       <ion-row no-padding>
       <ion-col>
-        <button *ngIf="idea.username!=username && !idea.isAdded" ion-button small color="primary" icon-left (click)="savePublicIdea(idea.ideaId)">
+        <button *ngIf="idea.username!=username && !idea.isAdded" ion-button small color="primary" icon-left (click)="savePublicIdea(idea)">
           <ion-icon name='add'></ion-icon>
           Speichern
         </button>
-        <button *ngIf="idea.isAdded" ion-button small color="danger" icon-left (click)="deletePublicIdea(idea.ideaId)">
+        <button *ngIf="idea.isAdded" ion-button small color="danger" icon-left (click)="deletePublicIdea(idea)">
           <ion-icon name="trash"></ion-icon>
           Entfernen
         </button>

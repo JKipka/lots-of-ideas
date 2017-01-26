@@ -12,13 +12,14 @@ page-signup {
     }
 
     ion-label {
+      text-align: center;
       margin-left: 5px;
     }
 
-    ion-input {
-      padding: 5px;
+    input{
+      text-align: center;
     }
-
+    
     .invalid {
       border-bottom: 1px solid #FF6153;
     }
@@ -26,5 +27,12 @@ page-signup {
     .error-message .item-inner {
       border-bottom: 0 !important;
     }
+
+    /*.header{
+        color:black;
+        font-size: 32px;
+        text-align: center;
+        font-weight: bold;
+    }*/
 
 }

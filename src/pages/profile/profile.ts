@@ -70,6 +70,7 @@ export class ProfilePage {
     let profileInfo = {
 
     };
+    this.editMode = false;
     //firebase.database().ref('users/'+this.uid);
   }
 

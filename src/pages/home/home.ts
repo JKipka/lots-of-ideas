@@ -84,7 +84,7 @@ export class HomePage {
           this.loading.present();
           this.user = user;
           this.auth.setUserData(this.user);
-          console.log(user);
+          //console.log(user);
           this.getUserData();
           unsubscribe();
         }
@@ -99,7 +99,7 @@ export class HomePage {
       this.userData = this.user;
       this.user = [];
       this.user = snapshot.val();
-      console.log(this.user);
+      //console.log(this.user);
       this.firstname = this.user.firstname;
       this.username = this.user.username;
       this.auth.setUsername(this.username);
@@ -137,7 +137,7 @@ export class HomePage {
         /*for (let i in this.ideas) {
           this.ideas[i].id = i;
         }*/
-        console.log(this.ideas);
+        //console.log(this.ideas);
         this.ideasBackUp = this.ideas;
       }else{
         this.ideaLength = 0;

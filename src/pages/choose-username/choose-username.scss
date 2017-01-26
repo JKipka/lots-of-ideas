@@ -4,6 +4,16 @@ page-choose-username {
       border-bottom: 0 !important;
     }
 
+    input{
+        text-align: center;
+    }
+
+    /*.header{
+        font-size: 32px;
+        text-align: center;
+        font-weight: bold;
+    }*/
+
     .invalid {
       border-bottom: 1px solid #FF6153;
     }

@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="danger">
     <ion-title>Nutzername</ion-title>
   </ion-navbar>
 
@@ -14,13 +14,11 @@
 
 
 <ion-content padding>
-  <ion-list>
-    <ion-list-header>Nutzernamen wählen</ion-list-header>
+  <p class="page-header">Nutzernamen wählen</p>
   <ion-item>
-      <ion-label stacked>Nutzername</ion-label>
       <ion-input [(ngModel)]="username" [ngModelOptions]="{standalone:true}" type="text" (input)="checkUsername()"
         placeholder="Dein eindeutiger Nutzername"></ion-input>
-    </ion-item>
-  </ion-list>
-    <button ion-button block outline (click)="saveUsername()" >Speichern</button>
+    </ion-item><br>
+  
+    <button ion-button block outline color="danger" (click)="saveUsername()" >Speichern</button>
 </ion-content>

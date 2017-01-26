@@ -1,45 +1,46 @@
 <ion-header>
   <ion-navbar color="primary">
     <ion-title>
-      Login
+      Einloggen
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+  <p class="page-header">Anmelden</p>
   <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
 
     <ion-item>
-      <ion-label stacked>Email</ion-label>
+      <ion-label stacked>E-Mail</ion-label>
       <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)"
-        placeholder="Your email address"
+        placeholder="E-Mail Adresse"
         [class.invalid]="!loginForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
     </ion-item>
     <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && (emailChanged || submitAttempt)">
-      <p>Please enter a valid email.</p>
+      <p>Bitte gib eine gültige E-Mail Adresse ein.</p>
     </ion-item>
 
     <ion-item>
-      <ion-label stacked>Password</ion-label>
+      <ion-label stacked>Passwort</ion-label>
       <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)"
-        placeholder="Your password"
+        placeholder="Passwort"
         [class.invalid]="!loginForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
     </ion-item>
     <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid  && (passwordChanged || submitAttempt)">
-      <p>Your password needs more than 6 characters.</p>
-    </ion-item>
+      <p>Das Passwort muss mindestens 6 Zeichen lang sein.</p>
+    </ion-item><br>
 
-    <button ion-button block type="submit">
-      Login
+    <button ion-button block outline type="submit">
+      Einloggen
     </button>
 
   </form>
 
-    <button ion-button block clear (click)="goToSignup()">
-      Create a new account
+    <button ion-button block clear color="secondary" (click)="goToSignup()">
+      Account erstellen
     </button>
 
-    <button ion-button block clear (click)="goToResetPassword()">
-      I forgot my password
+    <button ion-button block clear color="danger" (click)="goToResetPassword()">
+      Ich habe mein Passwort vergessen
     </button>
 </ion-content>

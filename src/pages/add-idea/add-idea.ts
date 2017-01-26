@@ -13,10 +13,10 @@ import firebase from 'firebase';
 export class AddIdeaPage {
 
   userId: any;
-  userData:any;
-  username:any;
-  userAcc:any;
-  score:any;
+  userData: any;
+  username: any;
+  userAcc: any;
+  score: any;
 
   loadingSpinner: any;
 
@@ -26,7 +26,7 @@ export class AddIdeaPage {
   websitetype: any = "";
   blogType: any = "";
   appType: any = "";
-  logline:any="";
+  logline: any = "";
 
   movietags: any = [];
   booktags: any = [];
@@ -51,9 +51,9 @@ export class AddIdeaPage {
     this.userAcc = navParams.get("userAcc");
     this.score = this.userAcc.score;
     this.username = navParams.get("username");
-    console.log(this.username);
+    /*console.log(this.username);
     console.log(this.userId);
-    console.log(this.userAcc);
+    console.log(this.userAcc);*/
 
     this.generalInfoForm = fB.group({
       ideatitle: ['', Validators.compose([Validators.required])]
@@ -193,43 +193,36 @@ export class AddIdeaPage {
       logline: idea.logline
     }).then(data => {
       if (idea.privacy == 'public') {
-        firebase.database().ref('public_ideas/').child(ideaId).set({
-          ideatitle: idea.ideatitle,
-          ideacategory: idea.ideacategory,
-          ideacontent: idea.ideacontent,
-          icon: idea.icon,
-          email: this.userData.email,
-          uid: this.userId,
-          username: this.username,
-          logline: idea.logline,
-          ideaId: ideaId
-        }).then(data => {
+        this.score = this.score + 20;
+      } else {
+        this.score = this.score + 10;
+      }
+      firebase.database().ref('users/' + this.userId).update({
+        score: this.score
+      }).then(data => {
+        if (idea.privacy == 'public') {
+          firebase.database().ref('public_ideas/').child(ideaId).set({
+            ideatitle: idea.ideatitle,
+            ideacategory: idea.ideacategory,
+            ideacontent: idea.ideacontent,
+            icon: idea.icon,
+            email: this.userData.email,
+            uid: this.userId,
+            username: this.username,
+            logline: idea.logline,
+            ideaId: ideaId
+          }).then(data => {
+            this.loadingSpinner.dismiss().catch(() => console.log("error caught"));
+            this.navCtrl.pop();
+          }).catch(error => console.log(error.message));
+        } else {
           this.loadingSpinner.dismiss().catch(() => console.log("error caught"));
           this.navCtrl.pop();
-        })
-      } else {
-        this.loadingSpinner.dismiss().catch(() => console.log("error caught"));
-        this.navCtrl.pop();
-      }
-    })
-    /*firebase.database().ref('users/' + this.userId + '/ideas/').once('value', snapshot => {
-      let ideaArray = [];
-      let counter = 0;
-      for (let i in snapshot.val()) {
-        ideaArray[i] = snapshot.val()[i];
-      }
-      ideaArray.push(idea);
-      firebase.database().ref('users/' + this.userId + '/').update({
-        ideas: ideaArray
-      }).then((data) => {
-        if (idea.privacy == 'public') {
-          firebase.database().ref('ideas/')
-        } else {
-
         }
-
       })
-    })*/
+
+    }).catch(error => console.log(error.message));
+
   }
 
   makeid() {

@@ -12,16 +12,17 @@ page-find-ideas {
     font-size: 2.0em;
     width: 100%;
     font-weight: bold;
-    color: blue;
+    color: color($colors, primary);
   }
 
   .card-subtitle {
+    margin-top: 10px;
     font-size: 1.0em;
     position: absolute;
     background: white;
     top: 52%;
     width: 100%;
-    color: blue;
+    color: color($colors, primary);
   }
 
   .card-title-dark {
@@ -30,7 +31,6 @@ page-find-ideas {
     font-size: 2.0em;
     width: 100%;
     font-weight: bold;
-    color:blue;
   }
 
   .card-subtitle-dark {
