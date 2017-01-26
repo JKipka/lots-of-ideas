@@ -11,6 +11,13 @@ import { StartupPage } from '../pages/startup/startup';
 import { ProfilePage } from '../pages/profile/profile';
 import { AddIdeaPage } from '../pages/add-idea/add-idea';
 import {RlTagInputModule} from 'angular2-tag-input';
+import {ViewIdeaPage } from '../pages/view-idea/view-idea';
+import { ShowIdeaPage } from '../pages/show-idea/show-idea';
+import {SavedIdeasPage} from '../pages/saved-ideas/saved-ideas';
+import {FriendsPage} from '../pages/friends/friends';
+import {FindIdeasPage} from '../pages/find-ideas/find-ideas';
+import {ViewPublicIdeasPage} from '../pages/view-public-ideas/view-public-ideas';
+import {ChooseUsernamePage} from '../pages/choose-username/choose-username';
 
 @NgModule({
   declarations: [
@@ -23,7 +30,14 @@ import {RlTagInputModule} from 'angular2-tag-input';
     SignupPage,
     StartupPage,
     ProfilePage,
-    AddIdeaPage
+    AddIdeaPage,
+    ViewIdeaPage,
+    ShowIdeaPage,
+    SavedIdeasPage,
+    FriendsPage,
+    FindIdeasPage,
+    ViewPublicIdeasPage,
+    ChooseUsernamePage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -40,7 +54,14 @@ import {RlTagInputModule} from 'angular2-tag-input';
     SignupPage,
     StartupPage,
     ProfilePage,
-    AddIdeaPage
+    AddIdeaPage,
+    ViewIdeaPage,
+    ShowIdeaPage,
+    SavedIdeasPage,
+    FriendsPage,
+    FindIdeasPage,
+    ViewPublicIdeasPage,
+    ChooseUsernamePage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

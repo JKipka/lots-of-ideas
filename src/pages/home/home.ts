@@ -6,12 +6,11 @@ import { Utils } from '../../app/utils';
 import firebase from 'firebase';
 import { ProfilePage } from '../../pages/profile/profile';
 import { AddIdeaPage } from '../../pages/add-idea/add-idea';
-
+import { ShowIdeaPage } from '../../pages/show-idea/show-idea';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html',
-  providers: [Auth]
+  templateUrl: 'home.html'
 })
 export class HomePage {
 
@@ -28,19 +27,20 @@ export class HomePage {
 
   user: any = [];
   userData: any = [];
+  username:any;
   zone: NgZone;
   loading: any;
   firstname: any = "";
-  ideas: any;
+  ideas: any = [];
   ideasBackUp: any;
   firstLogin: boolean = true;
 
+  hasEntries:boolean = true;
+  ideaLength:any;
+
   constructor(public navCtrl: NavController, public auth: Auth, public utils: Utils, public platform: Platform, public loadingCtrl: LoadingController, public alertCtrl: AlertController, public toastCtrl: ToastController) {
-    this.loading = this.loadingCtrl.create({
-      spinner: 'ios',
-      content: 'Lade Daten...'
-    });
-    this.loading.present();
+
+
 
     /* this.user = this.auth.user;
      console.log(this.user);*/
@@ -55,11 +55,16 @@ export class HomePage {
     this.checkIfLoggedIn();
   }
 
+  hasArrayEntries(){
+
+  }
+
   restoreIdeaArray() {
     this.ideas = this.ideasBackUp;
   }
 
   checkIfLoggedIn() {
+
     this.zone = new NgZone({});
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       this.zone.run(() => {
@@ -72,7 +77,13 @@ export class HomePage {
           unsubscribe();
 
         } else {
+          this.loading = this.loadingCtrl.create({
+            spinner: 'ios',
+            content: 'Lade Daten...'
+          });
+          this.loading.present();
           this.user = user;
+          this.auth.setUserData(this.user);
           console.log(user);
           this.getUserData();
           unsubscribe();
@@ -90,7 +101,10 @@ export class HomePage {
       this.user = snapshot.val();
       console.log(this.user);
       this.firstname = this.user.firstname;
-      this.getAllIdeas();
+      this.username = this.user.username;
+      this.auth.setUsername(this.username);
+      this.auth.userFirebase = this.user;
+      this.getAllIdeas(null);
     }), (error) => {
       this.loading.dismiss().catch(() => console.log("ERROR CATCH"));
       let alert = this.alertCtrl.create({
@@ -107,20 +121,36 @@ export class HomePage {
     };
   }
 
-  getAllIdeas() {
+  getAllIdeas(event) {
     this.ideas = [];
     firebase.database().ref('users/' + this.userData.uid + '/ideas/').once('value', snapshot => {
       if (snapshot.val() != undefined) {
-        this.ideas = snapshot.val();
-        for(let i in this.ideas){
-          this.ideas[i].id=i;
+        let counter = 0;
+        for( let i in snapshot.val()){
+          this.ideas.push(snapshot.val()[i]);
+          this.ideas[counter].id = i;
+          counter++;
         }
+        //this.ideas = snapshot.val();
+        this.ideaLength = this.ideas.length;
+        console.log(this.ideaLength);
+        /*for (let i in this.ideas) {
+          this.ideas[i].id = i;
+        }*/
         console.log(this.ideas);
         this.ideasBackUp = this.ideas;
+      }else{
+        this.ideaLength = 0;
       }
     }).then(data => {
       this.loading.dismiss().catch(() => console.log("ERROR CATCH"));
-      this.showToast();
+      if(this.utils.firstLogin==true){
+         this.showToast();
+         this.utils.firstLogin = false;
+      }
+      if(event!=null){
+        event.complete();
+      }
       //this.buildSearchArrays();
     })
   }
@@ -214,13 +244,16 @@ export class HomePage {
 
   viewProfile() {
     this.navCtrl.push(ProfilePage, {
-      user: this.user
+      user: this.user,
+      editable: true
     })
   }
 
   pushToAddNewIdea() {
     this.navCtrl.push(AddIdeaPage, {
-      userId: this.userData.uid
+      userId: this.userData.uid,
+      userData: this.userData,
+      username: this.username
     });
   }
 
@@ -238,13 +271,14 @@ export class HomePage {
           let tags = idea.ideacontent.tags;
           for (let j in tags) {
             if (tags[j].toLowerCase().indexOf(val.toLowerCase()) > -1) {
-              if(!isAdded){
-              result.push(idea);
-              isAdded = true;
+              if (!isAdded) {
+                result.push(idea);
+                isAdded = true;
               }
             }
           }
         }
+        
         this.ideas = [];
         this.ideas = result;
         /*this.ideas = this.ideas.filter((item) => {
@@ -256,6 +290,7 @@ export class HomePage {
     if (this.filterCategory) {
       if (val && val.trim() != '') {
         this.ideas = this.ideas.filter((item) => {
+         
           return (item.ideacategory.toLowerCase().indexOf(val.toLowerCase()) > -1);
         })
       }
@@ -264,6 +299,7 @@ export class HomePage {
     if (this.filterTitel) {
       if (val && val.trim() != '') {
         this.ideas = this.ideas.filter((item) => {
+         
           return (item.ideatitle.toLowerCase().indexOf(val.toLowerCase()) > -1);
         })
       }
@@ -272,6 +308,7 @@ export class HomePage {
   }
 
   resetFilter() {
+
     this.filter = "";
     this.category = "";
     this.restoreIdeaArray();
@@ -328,17 +365,17 @@ export class HomePage {
     }
   }
 
-  showAlert(idea){
+  showAlert(idea) {
     let alert = this.alertCtrl.create({
-      title:'Idee löschen',
+      title: 'Idee löschen',
       message: 'Möchtest du deine Idee wirklich löschen?',
       buttons: [{
-        text:'Abbrechen',
-        role:'cancel',
+        text: 'Abbrechen',
+        role: 'cancel',
         handler: () => {
           console.log("canceled");
         }
-      },{
+      }, {
         text: 'Löschen',
         handler: () => {
           this.removeIdea(idea);
@@ -349,9 +386,17 @@ export class HomePage {
     alert.present();
   }
 
-  removeIdea(idea){
-    firebase.database().ref('users/'+this.userData.uid+'/ideas/'+idea.id).remove();
-    this.getAllIdeas();
+  viewIdea(idea) {
+    this.navCtrl.push(ShowIdeaPage, {
+      uid: this.userData.uid,
+      idea: idea,
+      ideaId: idea.id
+    })
+  }
+
+  removeIdea(idea) {
+    firebase.database().ref('users/' + this.userData.uid + '/ideas/' + idea.id).remove();
+    this.getAllIdeas(null);
   }
 
 }

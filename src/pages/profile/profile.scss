@@ -1,7 +1,23 @@
 page-profile {
 
+    .image-container{
+        text-align: center;
+    }
+
+    .image{
+        border-radius: 10rem;
+        width: 12rem;
+        height: 12rem;
+    }
+
     .profile-label-fixed{
         font-weight: bold;
+    }
+
+    .p-header{
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 0px;
     }
 
 }

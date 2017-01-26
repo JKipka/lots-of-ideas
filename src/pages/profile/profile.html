@@ -6,37 +6,51 @@
 -->
 <ion-header>
 
-  <ion-navbar hideBackButton="true">
-    <ion-buttons left>
-      <button ion-button (click)="toRoot()">Zurück</button>
-    </ion-buttons>
-    <ion-title>Profil</ion-title>
-    <ion-buttons right>
+  <ion-navbar>
+    <ion-title>{{user.username}}</ion-title>
+    <ion-buttons right *ngIf="editable">
       <button *ngIf="!editMode" ion-button (click)="editProfile()">Bearbeiten</button>
-        <button *ngIf="editMode" ion-button (click)="saveProfile()">Fertig</button>
+      <button *ngIf="editMode" ion-button (click)="saveProfile()">Fertig</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
-<ion-list>
-  <ion-item>
-    <ion-label class="profile-label-fixed">Vorname:</ion-label>
-    <ion-label *ngIf="!editMode">{{user.firstname}}</ion-label>
-    <ion-input *ngIf="editMode" value="{{user.firstname}}"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label class="profile-label-fixed">Nachname:</ion-label>
-    <ion-label *ngIf="!editMode">{{user.lastname}}</ion-label>
-    <ion-input *ngIf="editMode" value="{{user.lastname}}"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label class="profile-label-fixed">E-Mail:</ion-label>
-    <ion-label *ngIf="!editMode">{{user.email}}</ion-label>
-    <ion-input *ngIf="editMode" value="{{user.email}}"></ion-input>
-  </ion-item>
-  <button ion-button outline block>Passwort ändern</button>
-  <button ion-button outline block color="danger">Account löschen</button>
-</ion-list>
+  <div class="image-container">
+    <img *ngIf="editable" class="image" src="{{this.currentUserData.picUrl}}" onError="this.src='assets/pics/profile.jpg'" (click)="changeProfilePicture()">
+    <img *ngIf="!editable" class="image" src="{{this.currentUserData.picUrl}}" onError="this.src='assets/pics/profile.jpg'">
+  </div>
+  <ion-row no-padding>
+      <ion-col>
+        <p class="p-header">Score</p>
+        {{user.score}}
+      </ion-col>
+      <ion-col text-center>
+        <p class="p-header">Ideen</p>
+        0
+      </ion-col>
+      <ion-col text-right>
+        <p class="p-header">Freunde</p>
+        0
+      </ion-col>
+    </ion-row>
+  <ion-list>
+    <ion-list-header>Profilinformationen</ion-list-header>
+    <ion-item>
+      <ion-label stacked>Vorname</ion-label>
+      <ion-label *ngIf="!editMode">{{user.firstname}}</ion-label>
+      <ion-input *ngIf="editMode" value="{{user.firstname}}"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Nachname</ion-label>
+      <ion-label *ngIf="!editMode">{{user.lastname}}</ion-label>
+      <ion-input *ngIf="editMode" value="{{user.lastname}}"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>E-Mail</ion-label>
+      <ion-label *ngIf="!editMode">{{user.email}}</ion-label>
+      <ion-input *ngIf="editMode" value="{{user.email}}"></ion-input>
+    </ion-item>
+  </ion-list>
 </ion-content>

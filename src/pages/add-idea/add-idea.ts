@@ -13,14 +13,18 @@ import firebase from 'firebase';
 export class AddIdeaPage {
 
   userId: any;
+  userData:any;
+  username:any;
 
   loadingSpinner: any;
 
-  category: string = "Auswählen...";
+  category: string = "Auswählen";
+  privacy: string = "privat";
   movieType: string = "";
   websitetype: any = "";
   blogType: any = "";
   appType: any = "";
+  logline:any="";
 
   movietags: any = [];
   booktags: any = [];
@@ -41,6 +45,9 @@ export class AddIdeaPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public fB: FormBuilder, public loading: LoadingController) {
 
     this.userId = navParams.get("userId");
+    this.userData = navParams.get("userData");
+    this.username = navParams.get("username");
+    console.log(this.username);
     console.log(this.userId);
 
     this.generalInfoForm = fB.group({
@@ -98,6 +105,8 @@ export class AddIdeaPage {
     this.createAndPresentLoading();
     let ideatitle = this.getGeneralInfo();
     let ideacategory = this.category;
+    let privacy = this.privacy;
+    let logline = this.logline;
     let movietitle = this.movieForm.value.movietitle;
     let moviegenre = this.movieForm.value.moviegenre;
     let moviecat = this.movieType;
@@ -112,17 +121,19 @@ export class AddIdeaPage {
       moviecategory: moviecat,
       moviegenre: moviegenre,
       moviedesc: moviedesc,
-      movietags: movietags
+      tags: movietags
     }
 
     idea = {
       ideatitle: ideatitle,
       ideacategory: ideacategory,
       ideacontent: movieIdea,
-      icon: 'videocam'
+      icon: 'videocam',
+      privacy: privacy,
+      logline: logline
     }
 
-    if (!this.movieForm.valid) {
+    if (!this.movieForm.valid && !this.generalInfoForm.valid) {
       console.log(this.movieForm.value);
     } else {
       this.updateIdeaDatabase(idea);
@@ -133,6 +144,8 @@ export class AddIdeaPage {
     this.createAndPresentLoading();
     let ideatitle = this.getGeneralInfo();
     let ideacategory = this.category;
+    let privacy = this.privacy;
+    let logline = this.logline;
     let storytitle = this.storyForm.value.storytitle;
     let storygenre = this.storyForm.value.storygenre;
     let storydesc = this.storyForm.value.storydesc;
@@ -145,17 +158,19 @@ export class AddIdeaPage {
       storytitle: storytitle,
       storygenre: storygenre,
       storydesc: storydesc,
-      storytags: storytags
+      tags: storytags
     }
 
     idea = {
       ideatitle: ideatitle,
       ideacategory: ideacategory,
       ideacontent: storyIdea,
-      icon: 'create'
+      icon: 'create',
+      privacy: privacy,
+      logline: logline
     }
 
-    if (!this.storyForm.valid) {
+    if (!this.storyForm.valid && !this.generalInfoForm.valid) {
       console.log("Fehler")
     } else {
       this.updateIdeaDatabase(idea);
@@ -163,7 +178,36 @@ export class AddIdeaPage {
   }
 
   updateIdeaDatabase(idea) {
-    firebase.database().ref('users/' + this.userId + '/ideas/').once('value', snapshot => {
+    let ideaId = this.makeid();
+    firebase.database().ref('users/' + this.userId + '/ideas/').child(ideaId).set({
+      ideatitle: idea.ideatitle,
+      ideacategory: idea.ideacategory,
+      ideacontent: idea.ideacontent,
+      icon: idea.icon,
+      privacy: idea.privacy,
+      logline: idea.logline
+    }).then(data => {
+      if (idea.privacy == 'public') {
+        firebase.database().ref('public_ideas/').child(ideaId).set({
+          ideatitle: idea.ideatitle,
+          ideacategory: idea.ideacategory,
+          ideacontent: idea.ideacontent,
+          icon: idea.icon,
+          email: this.userData.email,
+          uid: this.userId,
+          username: this.username,
+          logline: idea.logline,
+          ideaId: ideaId
+        }).then(data => {
+          this.loadingSpinner.dismiss().catch(() => console.log("error caught"));
+          this.navCtrl.pop();
+        })
+      } else {
+        this.loadingSpinner.dismiss().catch(() => console.log("error caught"));
+        this.navCtrl.pop();
+      }
+    })
+    /*firebase.database().ref('users/' + this.userId + '/ideas/').once('value', snapshot => {
       let ideaArray = [];
       let counter = 0;
       for (let i in snapshot.val()) {
@@ -173,16 +217,32 @@ export class AddIdeaPage {
       firebase.database().ref('users/' + this.userId + '/').update({
         ideas: ideaArray
       }).then((data) => {
-        this.loadingSpinner.dismiss().catch(() => console.log("error caught"));
-        this.navCtrl.pop();
+        if (idea.privacy == 'public') {
+          firebase.database().ref('ideas/')
+        } else {
+
+        }
+
       })
-    })
+    })*/
+  }
+
+  makeid() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 26; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
   }
 
   addWebsiteIdea() {
     this.createAndPresentLoading();
     let ideatitle = this.getGeneralInfo();
     let ideacategory = this.category;
+    let privacy = this.privacy;
+    let logline = this.logline;
     let websitetitle = this.websiteForm.value.websitetitle;
     let websitedomain = this.websiteForm.value.websitedomain;
     let websitecategory = this.websitetype;
@@ -201,10 +261,12 @@ export class AddIdeaPage {
       ideatitle: ideatitle,
       ideacategory: ideacategory,
       ideacontent: websiteIdea,
-      icon: 'globe'
+      icon: 'globe',
+      privacy: privacy,
+      logline: logline
     }
 
-    if (!this.websiteForm.valid) {
+    if (!this.websiteForm.valid && !this.generalInfoForm.valid) {
 
     } else {
       this.updateIdeaDatabase(idea);
@@ -215,18 +277,72 @@ export class AddIdeaPage {
     this.createAndPresentLoading();
     let ideatitle = this.getGeneralInfo();
     let ideacategory = this.category;
+    let privacy = this.privacy;
+    let logline = this.logline;
+    let blogtitle = this.blogForm.value.blogtitle;
+    let blogcategory = this.blogType;
+    let blogdesc = this.blogForm.value.blogdesc;
+    let blogtags = this.blogtags;
+    let blogIdea = {
+      blogtitle: blogtitle,
+      blogcategory: blogcategory,
+      blogdesc: blogdesc,
+      tags: blogtags
+    }
+    let idea = {
+      ideatitle: ideatitle,
+      ideacategory: ideacategory,
+      ideacontent: blogIdea,
+      icon: 'tumblr',
+      privacy: privacy,
+      logline: logline
+    }
+    if (!this.blogForm.valid && !this.generalInfoForm.valid) {
+
+    } else {
+      this.updateIdeaDatabase(idea);
+    }
   }
 
   addAppIdea() {
     this.createAndPresentLoading();
     let ideatitle = this.getGeneralInfo();
     let ideacategory = this.category;
+    let privacy = this.privacy;
+    let logline = this.logline;
+    let apptitle = this.appForm.value.apptitle;
+    let appcategory = this.appType;
+    let apptarget = this.appForm.value.apptarget;
+    let appdesc = this.appForm.value.appdesc;
+    let apptags = this.apptags;
+    let appIdea = {
+      apptitle: apptitle,
+      appcategory: appcategory,
+      apptarget: apptarget,
+      appdesc: appdesc,
+      tags: apptags
+    }
+    let idea = {
+      ideatitle: ideatitle,
+      ideacategory: ideacategory,
+      ideacontent: appIdea,
+      icon: 'appstore',
+      privacy: privacy,
+      logline: logline
+    }
+    if (!this.appForm.valid && !this.generalInfoForm.valid) {
+
+    } else {
+      this.updateIdeaDatabase(idea);
+    }
   }
 
   addNote() {
     this.createAndPresentLoading();
     let ideatitle = this.getGeneralInfo();
     let ideacategory = this.category;
+    let privacy = this.privacy;
+    let logline = this.logline;
     let notedesc = this.noteForm.value.notedesc;
     let notetags = this.notetags;
     let note = {
@@ -237,7 +353,9 @@ export class AddIdeaPage {
       ideatitle: ideatitle,
       ideacategory: ideacategory,
       ideacontent: note,
-      icon: 'document'
+      icon: 'document',
+      privacy: privacy,
+      logline: logline
     }
     if (!this.noteForm.valid) {
 

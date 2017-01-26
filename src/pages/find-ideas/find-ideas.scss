@@ -1,0 +1,43 @@
+page-find-ideas {
+
+     ion-card {
+    position: relative;
+    text-align: center;
+  }
+
+  .card-title {
+    position: absolute;
+    background: white;
+    top: 36%;
+    font-size: 2.0em;
+    width: 100%;
+    font-weight: bold;
+    color: blue;
+  }
+
+  .card-subtitle {
+    font-size: 1.0em;
+    position: absolute;
+    background: white;
+    top: 52%;
+    width: 100%;
+    color: blue;
+  }
+
+  .card-title-dark {
+    position: absolute;
+    top: 36%;
+    font-size: 2.0em;
+    width: 100%;
+    font-weight: bold;
+    color:blue;
+  }
+
+  .card-subtitle-dark {
+    font-size: 1.0em;
+    position: absolute;
+    top: 52%;
+    width: 100%;
+    color: blue;
+  }
+}

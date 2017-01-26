@@ -1,10 +1,8 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-buttons left>
-      <button ion-button (click)="logout()">
-      <ion-icon name="log-out" class="navBtn"></ion-icon>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
     </button>
-    </ion-buttons>
     <ion-title>Meine ganzen Ideen</ion-title>
     <ion-buttons right>
       <button ion-button (click)="viewProfile()">
@@ -15,10 +13,12 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-searchbar *ngIf="filter!='Kategorie' && filter!=''"(ionInput)="getSearchResults($event)" placeholder="Suche"></ion-searchbar>
+  <div *ngIf="ideaLength!=0">
+  <ion-searchbar *ngIf="filter!='Kategorie' && filter!=''" (ionInput)="getSearchResults($event)" placeholder="Suche"></ion-searchbar>
   <ion-item>
     <ion-label>Filter</ion-label>
-    <ion-select [(ngModel)]="filter" cancelText="Zurücksetzen" (ionCancel)="resetFilter()" (ionChange)="determineFilter(filter)" placeholder="Auswählen...">
+    <ion-select [(ngModel)]="filter" cancelText="Zurücksetzen" (ionCancel)="resetFilter()" (ionChange)="determineFilter(filter)"
+      placeholder="Auswählen...">
       <ion-option value="Schlagwörter">Schlagwörter</ion-option>
       <ion-option value="Titel">Titel</ion-option>
       <ion-option value="Kategorie">Kategorie</ion-option>
@@ -26,20 +26,23 @@
   </ion-item>
   <ion-item *ngIf="filter=='Kategorie'">
     <ion-label>Kategorie</ion-label>
-    <ion-select [(ngModel)]="category" cancelText="Zurücksetzen" (ionCancel)="resetCategoryFilter()" (ionChange)="getSearchResultsBy(category)" placeholder="Auswählen...">
+    <ion-select [(ngModel)]="category" cancelText="Zurücksetzen" (ionCancel)="resetCategoryFilter()" (ionChange)="getSearchResultsBy(category)"
+      placeholder="Auswählen...">
       <ion-option value="">Keine Auswahl</ion-option>
       <ion-option value="Film">Film</ion-option>
       <ion-option value="Geschichte">Geschichte</ion-option>
       <ion-option value="Webseite">Webseite</ion-option>
       <ion-option value="Blog">Blog</ion-option>
       <ion-option value="App">App</ion-option>
-      <ion-option value="Skizze">Skizze</ion-option>
       <ion-option value="Notiz">Notiz</ion-option>
     </ion-select>
-  </ion-item><br>
+  </ion-item></div><br>
   <ion-list>
+    <div *ngIf="ideas.length==0">
+      <p class="h2-message">Dir ist noch nichts eingefallen...</p>
+    </div>
     <ion-item-sliding *ngFor="let idea of ideas" [(ngModel)]="idea.ideatitle" ngDefaultControl>
-      <ion-item detail-push>
+      <ion-item detail-push (click)="viewIdea(idea)">
       <ion-icon name="{{idea.icon}}" item-left></ion-icon>
       <div class="idea-title">
         {{idea.ideatitle}}
@@ -58,4 +61,12 @@
     <ion-icon name="add"></ion-icon>
   </button>
   </ion-fab>
+  <ion-refresher (ionRefresh)="getAllIdeas($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Ziehen um zu aktualisieren"
+      refreshingSpinner="circles"
+      refreshingText="Aktualisiere...">
+    </ion-refresher-content>
+  </ion-refresher>
 </ion-content>

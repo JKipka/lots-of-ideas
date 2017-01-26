@@ -1,0 +1,26 @@
+<!--
+  Generated template for the ChooseUsername page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Nutzername</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <ion-list-header>Nutzernamen wählen</ion-list-header>
+  <ion-item>
+      <ion-label stacked>Nutzername</ion-label>
+      <ion-input [(ngModel)]="username" [ngModelOptions]="{standalone:true}" type="text" (input)="checkUsername()"
+        placeholder="Dein eindeutiger Nutzername"></ion-input>
+    </ion-item>
+  </ion-list>
+    <button ion-button block outline (click)="saveUsername()" >Speichern</button>
+</ion-content>

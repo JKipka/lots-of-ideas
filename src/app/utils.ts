@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export class Utils {
 
     user: any = null;
-
+    firstLogin: boolean = true;
 
     constructor() {
 
